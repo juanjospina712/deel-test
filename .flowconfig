@@ -1,0 +1,12 @@
+[ignore]
+.*/public/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]
