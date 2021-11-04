@@ -4,17 +4,24 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from 'react';
 import { mockLocalAPI, getFromAPI } from '../../clients/apiNoAuth';
-import { Blocked, ActionHolder } from './styles';
+import {
+  HireContainer,
+  CardHolder,
+  Column,
+  HireContent,
+  MainButton,
+} from './styles';
 import DDInput from '../../components/DropdownInput';
+import Card from '../../components/Card';
 
-const renderHighlight = (text, at, length) => {
+export const renderHighlight = (text, at, length) => {
   const textArr = text.split('');
   let renderString = '';
   textArr.forEach((char, i) => {
-    if (i === at) {
-      renderString += `<strong>${char}`;
-    } else if (i === at + length - 1) {
-      renderString += `${char}</strong>`;
+    if (i === at && length !== 0) {
+      renderString += `<span class="match">${char}`;
+    } else if (i === at + length - 1 && length !== 0) {
+      renderString += `${char}</span>`;
     } else {
       renderString += char;
     }
@@ -32,6 +39,7 @@ const CandidateRow = ({ item, at, length }) => (
 const HiresComp = () => {
   const [hires, setHires] = useState([]);
   const [regularPeople, setRegularPeople] = useState([]);
+  const [selectedHire, setSelectedHire] = useState({});
   const getCandidates = async () => {
     const candidates = await mockLocalAPI();
     setHires(candidates);
@@ -41,24 +49,58 @@ const HiresComp = () => {
     const result = await getFromAPI();
     setRegularPeople(result);
   };
+  const selectCandidate = () => {
+    if (selectedHire.email === 'jose@edukathe.org') {
+      alert(`You selected ${selectedHire.name}, amazing choice!`);
+    } else {
+      alert(`You selected ${selectedHire.name}, we all make mistakes`);
+    }
+  };
+
   useEffect(() => {
     getCandidates();
     getSecondChoices();
   }, []);
   return (
-    <Blocked>
-      <center>
-        <h1>Who to hire next?</h1>
-        <ActionHolder>
-          <h3>Search for the best candidates</h3>
-          <DDInput data={hires} searchTerm="name" Item={CandidateRow} />
-        </ActionHolder>
-        <ActionHolder>
-          <h3>Search for the okay candidates</h3>
-          <DDInput data={regularPeople} searchTerm="name" Item={CandidateRow} />
-        </ActionHolder>
-      </center>
-    </Blocked>
+    <HireContainer>
+      <h1>Who to hire next?</h1>
+      <HireContent>
+        <Column>
+          <CardHolder>
+            <Card>
+              <h3>Search for the best candidates</h3>
+              <DDInput
+                data={hires}
+                handleSelect={(item) => setSelectedHire(item)}
+                searchTerm="name"
+                Item={CandidateRow}
+              />
+            </Card>
+          </CardHolder>
+          <CardHolder>
+            <Card>
+              <h3>Search for the okay candidates</h3>
+              <DDInput
+                data={regularPeople}
+                searchTerm="name"
+                handleSelect={(item) => setSelectedHire(item)}
+                Item={CandidateRow}
+              />
+            </Card>
+          </CardHolder>
+        </Column>
+        <Column>
+          <CardHolder>
+            <Card>
+              <h2>Your selected candidate</h2>
+              <h3>Name: {selectedHire.name}</h3>
+              <h3>Email: {selectedHire.email}</h3>
+              <MainButton onClick={selectCandidate}>Hire Now!</MainButton>
+            </Card>
+          </CardHolder>
+        </Column>
+      </HireContent>
+    </HireContainer>
   );
 };
 

@@ -20,23 +20,23 @@ const mockAPI = () =>
         data: [
           {
             name: 'Juan Ospina',
-            email: 'juan@mail.com',
+            email: 'jose@edukathe.org',
           },
           {
             name: 'Jose Ospina',
-            email: 'jose@mail.com',
+            email: 'jose@edukathe.org',
           },
           {
             name: 'JJ Ospina',
-            email: 'jj@mail.com',
+            email: 'jose@edukathe.org',
           },
           {
             name: 'John Ospina',
-            email: 'john@mail.com',
+            email: 'jose@edukathe.org',
           },
           {
             name: 'Joseph Ospina',
-            email: 'joseph@mail.com',
+            email: 'jose@edukathe.org',
           },
         ],
       });

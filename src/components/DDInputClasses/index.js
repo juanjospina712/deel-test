@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
 import { highlighted } from '../../theme';
-import { Input } from '../Inputs';
+import { Input } from '../InputsClasses';
 
 import { DropdownContainer, InputContainer } from '../DropdownInput/styles';
 
@@ -15,6 +15,8 @@ class DDInput extends Component {
       show: false,
       inputValue: '',
       displayData: [],
+      at: 0,
+      length: 0,
     };
   }
 
@@ -24,12 +26,22 @@ class DDInput extends Component {
     this.setState({
       displayData:
         searchTermRequired || inputValue !== ''
-          ? data.filter(
-              (item) =>
+          ? data.filter((item) => {
+              if (
                 item[searchTerm]
                   .toLowerCase()
-                  .search(inputValue.toLowerCase()) !== -1,
-            )
+                  .search(inputValue.toLowerCase()) !== -1
+              ) {
+                this.setState({
+                  at: item[searchTerm]
+                    .toLowerCase()
+                    .indexOf(inputValue.toLowerCase()),
+                  length: inputValue.length,
+                });
+                return true;
+              }
+              return false;
+            })
           : data,
     });
   }
@@ -41,12 +53,22 @@ class DDInput extends Component {
       this.setState({
         displayData:
           searchTermRequired || inputValue !== ''
-            ? data.filter(
-                (item) =>
+            ? data.filter((item) => {
+                if (
                   item[searchTerm]
                     .toLowerCase()
-                    .search(inputValue.toLowerCase()) !== -1,
-              )
+                    .search(inputValue.toLowerCase()) !== -1
+                ) {
+                  this.setState({
+                    at: item[searchTerm]
+                      .toLowerCase()
+                      .indexOf(inputValue.toLowerCase()),
+                    length: inputValue.length,
+                  });
+                  return true;
+                }
+                return false;
+              })
             : data,
       });
     }
@@ -93,7 +115,7 @@ class DDInput extends Component {
       inputName = 'ddinput',
     } = this.props;
     const { handleClick, hideDropDown, onInputChange } = this;
-    const { show, inputValue, displayData } = this.state;
+    const { show, inputValue, displayData, at, length } = this.state;
     return (
       <InputContainer>
         <div>
@@ -136,7 +158,7 @@ class DDInput extends Component {
                   type="button"
                   onClick={() => handleClick(dataItem[searchTerm], dataItem)}
                 >
-                  <Item item={dataItem} />
+                  <Item item={dataItem} {...{ at, length }} />
                 </button>
               ))}
             </>

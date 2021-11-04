@@ -14,7 +14,7 @@ export const pages = {
   hiresClasses: {
     component: HiresClasses,
     Icon: ClientsIcon,
-    name: 'Hires',
+    name: 'Hires (Classes)',
     exact: true,
     path: '/classes',
   },
