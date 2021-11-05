@@ -11,6 +11,8 @@ export const DropdownContainer = styled.div.attrs({
 })`
   position: absolute;
   background-color: white;
+  overflow-y: scroll;
+  height: 300px;
   width: 100%;
   z-index: 2100;
   border-radius: 5%;

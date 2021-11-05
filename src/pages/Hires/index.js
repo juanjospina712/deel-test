@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-danger-with-children */
 /* eslint-disable react/prop-types */
@@ -40,6 +41,10 @@ const HiresComp = () => {
   const [hires, setHires] = useState([]);
   const [regularPeople, setRegularPeople] = useState([]);
   const [selectedHire, setSelectedHire] = useState({});
+  const [selectedHires, setSelectedHires] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [inputValueSecond, setInputValueSecond] = useState('');
+
   const getCandidates = async () => {
     const candidates = await mockLocalAPI();
     setHires(candidates);
@@ -49,12 +54,20 @@ const HiresComp = () => {
     const result = await getFromAPI();
     setRegularPeople(result);
   };
-  const selectCandidate = () => {
+  const selectCandidate = async () => {
+    if (selectedHires === 0) {
+      setSelectedHires(selectedHire);
+    } else {
+      setSelectedHires([...selectedHires, selectedHire]);
+      console.info(selectedHires, 'hereeeee');
+    }
     if (selectedHire.email === 'jose@edukathe.org') {
       alert(`You selected ${selectedHire.name}, amazing choice!`);
     } else {
       alert(`You selected ${selectedHire.name}, we all make mistakes`);
     }
+    setInputValue('');
+    setInputValueSecond('');
   };
 
   useEffect(() => {
@@ -70,6 +83,8 @@ const HiresComp = () => {
             <Card>
               <h3>Search for the best candidates</h3>
               <DDInput
+                inputValue={inputValue}
+                setInputValue={setInputValue}
                 data={hires}
                 handleSelect={(item) => setSelectedHire(item)}
                 searchTerm="name"
@@ -81,6 +96,8 @@ const HiresComp = () => {
             <Card>
               <h3>Search for the okay candidates</h3>
               <DDInput
+                inputValue={inputValueSecond}
+                setInputValue={setInputValueSecond}
                 data={regularPeople}
                 searchTerm="name"
                 handleSelect={(item) => setSelectedHire(item)}
@@ -96,6 +113,17 @@ const HiresComp = () => {
               <h3>Name: {selectedHire.name}</h3>
               <h3>Email: {selectedHire.email}</h3>
               <MainButton onClick={selectCandidate}>Hire Now!</MainButton>
+            </Card>
+          </CardHolder>
+          <CardHolder>
+            <Card>
+              <h2>Your selected candidates so far</h2>
+              {selectedHires.map((userData) => (
+                <>
+                  <h3>Name: {userData.name}</h3>
+                  <h3>Email: {userData.email}</h3>
+                </>
+              ))}
             </Card>
           </CardHolder>
         </Column>
