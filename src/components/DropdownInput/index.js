@@ -20,9 +20,11 @@ const DDInputNoItem = ({
   loading,
   reset,
   searchTermRequired = true,
+  inputValue,
+  setInputValue = () => {},
 }) => {
   const [show, setShow] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  // const [inputValue, setInputValue] = useState('');
   const [foundAt, setFoundAt] = useState({ at: 0, length: 0 });
 
   const searchTermDebounced = useDebounce(inputValue, 500);
@@ -38,6 +40,10 @@ const DDInputNoItem = ({
     setTimeout(() => {
       setShow(false);
     }, 300);
+  };
+
+  const onInputFocused = () => {
+    setShow(true);
   };
 
   const handleClick = (displayValue, item) => {
@@ -83,6 +89,9 @@ const DDInputNoItem = ({
           iconMargin="3%"
           iconPadding="4%"
           autoComplete="off"
+          onFocus={(e) => {
+            onInputFocused(e.value);
+          }}
           onChange={(e) => {
             onInputChange(e.target.value);
           }}
@@ -110,16 +119,18 @@ const DDInputNoItem = ({
           </center>
         ) : (
           <>
-            {displayData.map((dataItem) => (
-              <button
-                className="w-full focus:outline-none text-left"
-                key={dataItem.id}
-                type="button"
-                onClick={() => handleClick(dataItem[searchTerm], dataItem)}
-              >
-                <Item item={dataItem} {...foundAt} />
-              </button>
-            ))}
+            <div className="h-full">
+              {displayData.map((dataItem) => (
+                <button
+                  className="w-full focus:outline-none text-left"
+                  key={dataItem.id}
+                  type="button"
+                  onClick={() => handleClick(dataItem[searchTerm], dataItem)}
+                >
+                  <Item item={dataItem} {...foundAt} />
+                </button>
+              ))}
+            </div>
           </>
         )}
         {displayData.length === 0 && (
